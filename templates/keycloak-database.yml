@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keycloak-database-config-map
+data:
+  POSTGRES_DB: "keycloak"
+  PGDATA: "/var/lib/postgresql/data/pgdata"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: keycloak-database-secrets
+stringData:
+  username: {{ .Values.KeycloakDatabase.Username | quote }}
+  password: {{ .Values.KeycloakDatabase.Password | quote }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: keycloak-database-volume-{{ .Release.Namespace }}
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /mnt/keycloak-database-{{ .Release.Namespace }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-database-volume-claim
+spec:
+  storageClassName: manual
+  volumeName: keycloak-database-volume-{{ .Release.Namespace }}
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-database-deployment
+  labels:
+    app: keycloak-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-database
+  template:
+    metadata:
+      labels:
+        app: keycloak-database
+    spec:
+      containers:
+        - name: keycloak-database
+          image: "postgres:{{ .Values.KeycloakDatabase.Version }}"
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-database-secrets
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-database-secrets
+                  key: password
+          envFrom:
+            - configMapRef:
+                name: keycloak-database-config-map
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data/pgdata
+              name: data-volume
+      volumes:
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: keycloak-database-volume-claim
+      {{- if .Values.NamespacedNodes }}
+      nodeSelector:
+        env: {{ .Release.Namespace }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-database-service
+  labels:
+    app: keycloak-database-service
+spec:
+  selector:
+    app: keycloak-database
+  ports:
+    - protocol: TCP
+      port: 5432

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gover-customer-app-deployment
+  labels:
+    app: gover-customer-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gover-customer-app
+  template:
+    metadata:
+      labels:
+        app: gover-customer-app
+    spec:
+      containers:
+        - name: gover-customer-app
+          image: "ghcr.io/aivot-digital/gover-customer:{{ .Values.Gover.Version }}"
+          ports:
+            - containerPort: 80
+      {{- if .Values.NamespacedNodes }}
+      nodeSelector:
+        env: {{ .Release.Namespace }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gover-customer-app-service
+  labels:
+    app: gover-customer-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: gover-customer-app
+  ports:
+    - protocol: TCP
+      port: 80

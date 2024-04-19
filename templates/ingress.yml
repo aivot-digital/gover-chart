@@ -1,0 +1,46 @@
+{{- if not .Values.DisableIngress}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gover-ingress
+  annotations:
+    cert-manager.io/issuer: "letsencrypt-production"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - {{ .Values.Host }}
+      secretName: gover-{{ .Release.Namespace }}-tls
+  rules:
+    - host: {{ .Values.Host }}
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: gover-service
+                port:
+                  number: 8080
+          - path: /idp
+            pathType: Prefix
+            backend:
+              service:
+                name: keycloak-service
+                port:
+                  number: 8080
+          - path: /staff
+            pathType: Prefix
+            backend:
+              service:
+                name: gover-staff-app-service
+                port:
+                  number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: gover-customer-app-service
+                port:
+                  number: 80
+{{- end}}

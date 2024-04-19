@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clamav-deployment
+  labels:
+    app: clamav
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clamav
+  template:
+    metadata:
+      labels:
+        app: clamav
+    spec:
+      containers:
+        - name: clamav
+          image: "clamav/clamav-debian:{{ .Values.ClamAV.Version }}"
+          ports:
+            - containerPort: 3310
+      {{- if .Values.NamespacedNodes }}
+      nodeSelector:
+        env: {{ .Release.Namespace }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clamav-service
+  labels:
+    app: clamav-service
+spec:
+  selector:
+    app: clamav
+  ports:
+    - protocol: TCP
+      port: 3310

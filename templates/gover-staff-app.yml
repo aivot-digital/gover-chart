@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gover-staff-app-deployment
+  labels:
+    app: gover-staff-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gover-staff-app
+  template:
+    metadata:
+      labels:
+        app: gover-staff-app
+    spec:
+      containers:
+        - name: gover-staff-app
+          image: "ghcr.io/aivot-digital/gover{{ if .Values.Internal }}-internal{{ end }}-staff:{{ .Values.Gover.Version }}"
+          ports:
+            - containerPort: 80
+      imagePullSecrets:
+        - name: ghcr-registry-secret
+      {{- if .Values.NamespacedNodes }}
+      nodeSelector:
+        env: {{ .Release.Namespace }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gover-staff-app-service
+  labels:
+    app: gover-staff-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: gover-staff-app
+  ports:
+    - protocol: TCP
+      port: 80
