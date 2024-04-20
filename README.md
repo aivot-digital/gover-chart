@@ -28,7 +28,7 @@ Create a values file `./my-values.yml` with the following content and overwrite 
 
 ```yaml
 # The hostname where Gover will be available
-Host: my.gover.digital
+Host: my.domain.de
 
 # Determine if the namespace of this chart should be used as a node selector
 # This is useful if you run several instances of Gover on the same cluster and want to separate the setups onto physically different nodes
@@ -45,23 +45,25 @@ Gover:
   Version: 4.0.1
 
   # URL where the Gover instance will be available
-  Hostname: https://my.gover.digital
+  Hostname: https://my.domain.de
 
   # Mail address where errors reports will be sent to
-  ReportMail: sysadmin@aivot.de
+  ReportMail: admin@my.domain.de
 
   # Mail address that will be used as the sender for mails
-  FromMail: '"My Gover System" <noreply@my.gover.digital>'
+  FromMail: '"Gover" <noreply@my.domain.de>'
 
   Sentry:
     # The environment that will be sent to Sentry for error tracking
     Environment: development
 
     # The DSN for the Sentry instance where the backend errors will be sent to
-    Server: https://eada765f8e614b54b6f2d251fd69e252@sentry.aivot.cloud/2
+    # Set to empty string to disable frontend error tracking -> ''
+    Server: https://123@my.domain.de/1
 
     # The DSN for the Sentry instance where the frontend errors will be sent to
-    App: https://1677139e6e374703aaed37a824e3fb4a@sentry.aivot.cloud/3
+    # Set to empty string to disable frontend error tracking -> ''
+    App: https://789@my.domain.de/2
 
   Files:
     # List of allowed file extensions
@@ -78,7 +80,7 @@ Keycloak:
   Version: 24.0.1.1
 
   # Hostname where Keycloak will be available
-  Hostname: my.gover.digital
+  Hostname: my.domain.de
 
   # Initial username of the Keycloak admin user
   Username: admin
@@ -143,8 +145,8 @@ ClamAV:
 SMTP:
   Host: smtp.relay.de
   Port: 587
-  Username: sysadmin@aivot.de
-  Password: passwort
+  Username: mail@my.domain.de
+  Password: password
 ```
 
 ## Install the Gover Helm Chart
