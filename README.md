@@ -163,7 +163,14 @@ helm install \
 You can use the realm exports `./files/export-customer-realm.json` and `./files/export-staff-realm.json` to setup the Keycloak realms.
 Just log into the Keycloak admin console and import the realms.
 
-## Set Backend Client Secret
+After importing the customer realm, update the urls in the identity provider settings for all identity providers to match your Gover instance domain.
+
+You also need to update the smtp settings in the email settings of the staff realm to allow user email verification for your staff.
+Disable email verification in the staff realm if no email verification is needed and to prevent mail sending errors when creating users or logging them in.
+
+When the realms are imported and set up, add your first user to the staff realm and set the GoverBackendClientSecret in the values file.
+
+### Set Backend Client Secret
 After setting up the staff realm in Keycloak, you need to set the backend client secret for Gover in the values file.
 This is because the backend client secret needs to be set for the backend to correctly interact with the Keycloak.
 Just regenerate the secret in the Keycloak admin console for the client called `backend` in the staff realm and set it in your values file.
