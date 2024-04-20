@@ -155,9 +155,14 @@ helm install \
   ./gover
 ```
 
-## Update values
-You need to apply new values after setting up the Keycloak.
+## Setup Keycloak
+You can use the realm exports `./files/export-customer-realm.json` and `./files/export-staff-realm.json` to setup the Keycloak realms.
+Just log into the Keycloak admin console and import the realms.
+
+## Set Backend Client Secret
+After setting up the staff realm in Keycloak, you need to set the backend client secret for Gover in the values file.
 This is because the backend client secret needs to be set for the backend to correctly interact with the Keycloak.
+Just regenerate the secret in the Keycloak admin console for the client called `backend` in the staff realm and set it in your values file.
 Update the value for `Keycloak.GoverBackendClientSecret` in your values file and run the following command:
 
 ```bash
