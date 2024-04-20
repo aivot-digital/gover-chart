@@ -5,7 +5,11 @@
 - Nginx Ingress Controller installed (Only if you want to use the nginx ingress setup with automatic certificate generation)
 - Cert Manager installed (Only if you want to use the nginx ingress setup with automatic certificate generation)
 
-Clone this chart into the directory `./gover`.
+Clone this chart into the directory `./gover`:
+
+```bash
+git clone https://github.com/aivot-digital/gover-chart.git ./gover
+```
 
 ### Install Cert Manager
 You can install the Cert Manager with the following command:
