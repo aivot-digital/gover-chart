@@ -38,10 +38,8 @@ data:
   GOVER_REDIS_PORT: "6379"
   GOVER_REDIS_DATABASE: "0"
 
-  GOVER_FEATURES_COMPLEXITY: "true"
-  GOVER_FEATURES_DIALOGS: "true"
-  GOVER_FEATURES_TEMPLATES: "true"
-  GOVER_FEATURES_FORMS: "true"
+  GOVER_PUPPET_PDF_HOST: "puppet-service"
+  GOVER_PUPPET_PDF_PORT: "3000"
 ---
 apiVersion: v1
 kind: Secret
@@ -51,6 +49,7 @@ stringData:
   keycloakClientSecret: {{ .Values.Keycloak.GoverBackendClientSecret | quote }}
   smtpUsername: {{ .Values.SMTP.Username | quote }}
   smtpPassword: {{ .Values.SMTP.Password | quote }}
+  telemetryKey: {{ .Values.Gover.TelemetryKey | quote }}
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -125,6 +124,11 @@ spec:
                 secretKeyRef:
                   name: gover-secrets
                   key: smtpPassword
+            - name: GOVER_TELEMETRY_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: gover-secrets
+                  key: telemetryKey
           envFrom:
             - configMapRef:
                 name: gover-config-map

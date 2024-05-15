@@ -42,7 +42,7 @@ DisableIngress: false
 # Settings for the Gover instance
 Gover:
   # Version of the Gover image
-  Version: 4.0.1
+  Version: 4.1.1
 
   # URL where the Gover instance will be available
   Hostname: https://my.domain.de
@@ -52,6 +52,9 @@ Gover:
 
   # Mail address that will be used as the sender for mails
   FromMail: '"Gover" <noreply@my.domain.de>'
+
+  # The secret key that will be used to access the telemetry data. Leave empty to disable telemetry -> ''
+  TelemetryKey: ''
 
   Sentry:
     # The environment that will be sent to Sentry for error tracking
@@ -77,7 +80,7 @@ Gover:
 # Settings for the Keycloak instance
 Keycloak:
   # Version of the Keycloak image
-  Version: 24.0.1.1
+  Version: 24.0.4.0
 
   # Hostname where Keycloak will be available
   Hostname: my.domain.de
@@ -140,6 +143,10 @@ Redis:
 # Settings for the ClamAV AntiVirus
 ClamAV:
   Version: 1.3.0
+
+# Settings for the Puppet PDF instance
+Puppet:
+  Version: 1.3.2
 
 # Settings for the SMTP server
 SMTP:

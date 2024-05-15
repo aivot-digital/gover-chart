@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: puppet-deployment
+  labels:
+    app: puppet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: puppet
+  template:
+    metadata:
+      labels:
+        app: puppet
+    spec:
+      containers:
+        - name: puppet
+          image: "ghcr.io/mobaetzel/puppet-pdf:{{ .Values.Puppet.Version }}"
+          ports:
+            - containerPort: 3000
+      {{- if .Values.NamespacedNodes }}
+      nodeSelector:
+        env: {{ .Release.Namespace }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: puppet-service
+  labels:
+    app: puppet-service
+spec:
+  selector:
+    app: puppet
+  ports:
+    - protocol: TCP
+      port: 3000
