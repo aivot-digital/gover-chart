@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: puppet
-          image: "ghcr.io/mobaetzel/puppet-pdf:{{ .Values.Puppet.Version }}"
+          image: "ghcr.io/aivot-digital/puppet-pdf:{{ .Values.Puppet.Version }}"
           ports:
             - containerPort: 3000
       {{- if .Values.NamespacedNodes }}
