@@ -121,7 +121,7 @@ Puppet:
 
 # Settings for the SMTP server
 SMTP:
-  Host: in-v3.mailjet.com
+  Host: smtp.kommune.de
   Port: 587
-  Username: aa8f054dbc06b7acaf8216004b115a7a
-  Password: cbe54365080ddfd693ebc0a9d5780545
+  Username: username
+  Password: password
