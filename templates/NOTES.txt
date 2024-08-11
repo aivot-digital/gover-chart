@@ -2,20 +2,6 @@ Thank you for installing Gover.
 
 Your release is named {{ .Release.Name }} and placed in the namespace {{ .Release.Namespace }}.
 
-You have deployed Version {{ .Values.Gover.Version }} of Gover.
-
-{{- if .Values.NamespacedNodes }}
-You have deployed Gover only onto nodes with the label env={{ .Release.Namespace }}.
-{{- else }}
-You have deployed Gover onto all nodes.
-{{- end }}
-
-{{- if .Values.DisableIngress }}
-You have disabled the Ingress resource.
-{{- else }}
-You have enabled the Ingress resource.
-{{- end }}
-
 To learn more about the release, try:
 
   $ helm status --namespace={{ .Release.Namespace}} {{ .Release.Name }}

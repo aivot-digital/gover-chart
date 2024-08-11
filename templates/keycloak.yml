@@ -1,113 +1,112 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: keycloak-config-map
+    name: keycloak-config-map
 data:
-  KC_PROXY: 'edge'
-  KC_HOSTNAME: {{ .Values.Keycloak.Hostname | quote }}
-  KC_HOSTNAME_PATH: "/idp"
-  KC_HTTP_RELATIVE_PATH: "/idp"
-  KC_FEATURES: "transient-users,update-email"
-  KC_HEALTH_ENABLED: "true"
+    KC_HTTP_ENABLED: "true"
+    KC_PROXY_HEADERS: "xforwarded"
+    KC_HOSTNAME: {{ .Values.Host | quote }}
+    KC_HOSTNAME_PATH: "/idp"
+    KC_HTTP_RELATIVE_PATH: "/idp"
+    KC_FEATURES: "transient-users,update-email"
+    KC_HEALTH_ENABLED: "true"
 
-  KC_DB: 'postgres'
-  KC_DB_URL: "jdbc:postgresql://keycloak-database-service:5432/keycloak"
+    KC_DB: "postgres"
+    KC_DB_URL: "jdbc:postgresql://{{ .Values.Keycloak.Database.Host }}:{{ .Values.Keycloak.Database.Port }}/{{ .Values.Keycloak.Database.Database }}"
 
-  KC_SPI_EGOV_BUNDID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
-  KC_SPI_EGOV_BUNDID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
-  KC_SPI_EGOV_BUNDID_ORG_NAME: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
-  KC_SPI_EGOV_BUNDID_ORG_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
-  KC_SPI_EGOV_BUNDID_ORG_URL: {{ .Values.Keycloak.IdProviderData.Org.Url | quote }}
-  KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Name | quote }}
-  KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Email | quote }}
-  KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.SupportContact.Name | quote }}
-  KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.SupportContact.Email | quote }}
+    KC_SPI_EGOV_BUNDID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
+    KC_SPI_EGOV_BUNDID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
+    KC_SPI_EGOV_BUNDID_ORG_NAME: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
+    KC_SPI_EGOV_BUNDID_ORG_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
+    KC_SPI_EGOV_BUNDID_ORG_URL: {{ .Values.Keycloak.IdProviderData.Org.Url | quote }}
+    KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Name | quote }}
+    KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Email | quote }}
+    KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.SupportContact.Name | quote }}
+    KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.SupportContact.Email | quote }}
 
-  KC_SPI_EGOV_BAYERNID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
-  KC_SPI_EGOV_BAYERNID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
-  KC_SPI_EGOV_BAYERNID_ORG_NAME: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
-  KC_SPI_EGOV_BAYERNID_ORG_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
-  KC_SPI_EGOV_BAYERNID_ORG_URL: {{ .Values.Keycloak.IdProviderData.Org.Url | quote }}
-  KC_SPI_EGOV_BAYERNID_TECHNICAL_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Name | quote }}
-  KC_SPI_EGOV_BAYERNID_TECHNICAL_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Email | quote }}
-  KC_SPI_EGOV_BAYERNID_SUPPORT_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.SupportContact.Name | quote }}
-  KC_SPI_EGOV_BAYERNID_SUPPORT_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.SupportContact.Email | quote }}
-  KC_SPI_EGOV_BAYERNID_DISPLAY_NAME: {{ .Values.Keycloak.IdProviderData.DisplayName | quote }}
-  KC_SPI_EGOV_BAYERNID_DISPLAY_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
+    KC_SPI_EGOV_BAYERNID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
+    KC_SPI_EGOV_BAYERNID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
+    KC_SPI_EGOV_BAYERNID_ORG_NAME: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
+    KC_SPI_EGOV_BAYERNID_ORG_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
+    KC_SPI_EGOV_BAYERNID_ORG_URL: {{ .Values.Keycloak.IdProviderData.Org.Url | quote }}
+    KC_SPI_EGOV_BAYERNID_TECHNICAL_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Name | quote }}
+    KC_SPI_EGOV_BAYERNID_TECHNICAL_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Email | quote }}
+    KC_SPI_EGOV_BAYERNID_SUPPORT_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.SupportContact.Name | quote }}
+    KC_SPI_EGOV_BAYERNID_SUPPORT_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.SupportContact.Email | quote }}
+    KC_SPI_EGOV_BAYERNID_DISPLAY_NAME: {{ .Values.Keycloak.IdProviderData.DisplayName | quote }}
+    KC_SPI_EGOV_BAYERNID_DISPLAY_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
 
-  QUARKUS_HTTP_LIMITS_MAX_FORM_ATTRIBUTE_SIZE: "10M"
+    QUARKUS_HTTP_LIMITS_MAX_FORM_ATTRIBUTE_SIZE: "10M"
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: keycloak-secrets
+    name: keycloak-secrets
 stringData:
-  username: {{ .Values.Keycloak.Username | quote}}
-  password: {{ .Values.Keycloak.Password | quote}}
+    username: {{ .Values.Keycloak.Username | quote}}
+    password: {{ .Values.Keycloak.Password | quote}}
+    databaseUsername: {{ .Values.Keycloak.Database.Username | quote}}
+    databasePassword: {{ .Values.Keycloak.Database.Password | quote}}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: keycloak-deployment
-  labels:
-    app: keycloak
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: keycloak
-  template:
-    metadata:
-      labels:
+    name: keycloak-deployment
+    labels:
         app: keycloak
-    spec:
-      containers:
-        - name: keycloak
-          image: "ghcr.io/aivot-digital/keycloak-egov-plugins:{{ .Values.Keycloak.Version }}"
-          args:
-            - "start"
-            - "--verbose"
-          ports:
-            - containerPort: 8080
-          env:
-            - name: KEYCLOAK_ADMIN
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-secrets
-                  key: username
-            - name: KEYCLOAK_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-secrets
-                  key: password
-            - name: KC_DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-database-secrets
-                  key: username
-            - name: KC_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: keycloak-database-secrets
-                  key: password
-          envFrom:
-            - configMapRef:
-                name: keycloak-config-map
-      {{- if .Values.NamespacedNodes }}
-      nodeSelector:
-        env: {{ .Release.Namespace }}
-      {{- end }}
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: keycloak
+    template:
+        metadata:
+            labels:
+                app: keycloak
+        spec:
+            containers:
+                -   name: keycloak
+                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:25.0.2.0
+                    args:
+                        - "start"
+                        - "--verbose"
+                    ports:
+                        -   containerPort: 8080
+                    env:
+                        -   name: KEYCLOAK_ADMIN
+                            valueFrom:
+                                secretKeyRef:
+                                    name: keycloak-secrets
+                                    key: username
+                        -   name: KEYCLOAK_ADMIN_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    name: keycloak-secrets
+                                    key: password
+                        -   name: KC_DB_USERNAME
+                            valueFrom:
+                                secretKeyRef:
+                                    name: keycloak-secrets
+                                    key: databaseUsername
+                        -   name: KC_DB_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    name: keycloak-secrets
+                                    key: databasePassword
+                    envFrom:
+                        -   configMapRef:
+                                name: keycloak-config-map
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: keycloak-service
-  labels:
-    app: keycloak-service
+    name: keycloak-service
+    labels:
+        app: keycloak-service
 spec:
-  type: ClusterIP
-  selector:
-    app: keycloak
-  ports:
-    - protocol: TCP
-      port: 8080
+    type: ClusterIP
+    selector:
+        app: keycloak
+    ports:
+        -   protocol: TCP
+            port: 8080

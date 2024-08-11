@@ -1,159 +1,197 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gover-config-map
+    name: gover-config-map
 data:
-  GOVER_FROM_MAIL: {{ .Values.Gover.FromMail | quote }}
-  GOVER_REPORT_MAIL: {{ .Values.Gover.ReportMail | quote }}
-  GOVER_DB_HOST: "gover-database-service"
-  GOVER_DB_PORT: "5432"
-  GOVER_DB_DATABASE: "gover"
+    GOVER_HOSTNAME: "https://{{ .Values.Host }}"
+    GOVER_LOG_LEVEL: "INFO"
 
-  GOVER_CLAM_HOST: "clamav-service"
-  GOVER_CLAM_PORT: "3310"
+    GOVER_FROM_MAIL: {{ .Values.Gover.Smtp.FromMail | quote }}
+    GOVER_REPORT_MAIL: {{ .Values.Gover.ReportMail | quote }}
 
-  GOVER_SMTP_HOST: {{ .Values.SMTP.Host | quote }}
-  GOVER_SMTP_PORT: {{ .Values.SMTP.Port | quote }}
+    GOVER_DB_HOST: {{ .Values.Gover.Database.Host | quote }}
+    GOVER_DB_PORT: {{ .Values.Gover.Database.Port | quote }}
+    GOVER_DB_DATABASE: {{ .Values.Gover.Database.Database | quote }}
 
-  GOVER_LOG_LEVEL: "INFO"
+    GOVER_CLAM_HOST: {{ .Values.Gover.ClamAV.Host | quote }}
+    GOVER_CLAM_PORT: {{ .Values.Gover.ClamAV.Port | quote }}
 
-  GOVER_SENTRY_SERVER: {{ .Values.Gover.Sentry.Server | quote }}
-  GOVER_SENTRY_WEB_APP: {{ .Values.Gover.Sentry.App | quote }}
-  GOVER_ENVIRONMENT: {{ .Values.Gover.Sentry.Environment | quote }}
-  GOVER_HOSTNAME: {{ .Values.Gover.Hostname | quote }}
+    GOVER_SMTP_HOST: {{ .Values.Gover.Smtp.Host | quote }}
+    GOVER_SMTP_PORT: {{ .Values.Gover.Smtp.Port | quote }}
+    GOVER_SMTP_AUTH: {{ if .Values.Gover.Smtp.DisableAuth }}"false"{{ else }}"true"{{ end }}
+    GOVER_SMTP_TLS: {{ if .Values.Gover.Smtp.DisableTLS }}"false"{{ else }}"true"{{ end }}
 
-  GOVER_FILE_EXTENSIONS: {{ .Values.Gover.Files.Extensions | quote }}
-  GOVER_CONTENT_TYPES: {{ .Values.Gover.Files.ContentTypes | quote }}
+    {{- if .Values.Gover.Sentry }}
+    GOVER_SENTRY_SERVER: {{ .Values.Gover.Sentry.Server | quote }}
+    GOVER_SENTRY_WEB_APP: {{ .Values.Gover.Sentry.App | quote }}
+    GOVER_ENVIRONMENT: {{ .Values.Gover.Sentry.Environment | quote }}
+    {{- end }}
 
-  GOVER_KEYCLOAK_OIDC_FRONTEND_CLIENT_ID: "app"
-  GOVER_KEYCLOAK_OIDC_BACKEND_CLIENT_ID: "backend"
-  GOVER_KEYCLOAK_OIDC_HOSTNAME: "https://{{ .Values.Keycloak.Hostname }}/idp"
-  GOVER_KEYCLOAK_OIDC_REALM: "staff"
+    GOVER_FILE_EXTENSIONS: {{ .Values.Gover.Files.Extensions | quote }}
+    GOVER_CONTENT_TYPES: {{ .Values.Gover.Files.ContentTypes | quote }}
 
-  GOVER_KEYCLOAK_ID_CLIENT: "app"
-  GOVER_KEYCLOAK_ID_HOSTNAME: "https://{{ .Values.Keycloak.Hostname }}/idp"
-  GOVER_KEYCLOAK_ID_REALM: "customer"
+    GOVER_KEYCLOAK_OIDC_FRONTEND_CLIENT_ID: "app"
+    GOVER_KEYCLOAK_OIDC_BACKEND_CLIENT_ID: "backend"
+    GOVER_KEYCLOAK_OIDC_HOSTNAME: "https://{{ .Values.Host }}/idp"
+    GOVER_KEYCLOAK_OIDC_REALM: "staff"
 
-  GOVER_REDIS_HOST: "redis-service"
-  GOVER_REDIS_PORT: "6379"
-  GOVER_REDIS_DATABASE: "0"
+    GOVER_KEYCLOAK_ID_CLIENT: "app"
+    GOVER_KEYCLOAK_ID_HOSTNAME: "https://{{ .Values.Host }}/idp"
+    GOVER_KEYCLOAK_ID_REALM: "customer"
 
-  GOVER_PUPPET_PDF_HOST: "puppet-service"
-  GOVER_PUPPET_PDF_PORT: "3000"
+    GOVER_REDIS_HOST: "redis-service"
+    GOVER_REDIS_PORT: "6379"
+    GOVER_REDIS_DATABASE: "0"
+
+    GOVER_PUPPET_PDF_HOST: "puppet-service"
+    GOVER_PUPPET_PDF_PORT: "3000"
+
+    GOVER_STORAGE_REMOTE_ENDPOINT: {{ .Values.Gover.Storage.Endpoint | quote }}
+    GOVER_STORAGE_REMOTE_BUCKET: {{ .Values.Gover.Storage.Bucket | quote }}
+
+    {{- if .Values.Gover.Payment.EPayBL }}
+    GOVER_PAYMENT_EPAYBL_URL: {{ .Values.Gover.Payment.EPayBL.Url | quote }}
+    {{- end}}
+
+    {{- if .Values.Gover.Payment.PmPayment }}
+    GOVER_PAYMENT_PMPAYMENT_URL: {{ .Values.Gover.Payment.PmPayment.Url | quote }}
+    {{- end}}
+
+    {{- if .Values.Gover.Payment.Giropay }}
+    GOVER_PAYMENT_GIROPAY_URL: {{ .Values.Gover.Payment.Giropay.Url | quote }}
+    {{- end}}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: gover-secrets
+    name: gover-secrets
 stringData:
-  keycloakClientSecret: {{ .Values.Keycloak.GoverBackendClientSecret | quote }}
-  smtpUsername: {{ .Values.SMTP.Username | quote }}
-  smtpPassword: {{ .Values.SMTP.Password | quote }}
-  telemetryKey: {{ .Values.Gover.TelemetryKey | quote }}
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: gover-volume-{{ .Release.Namespace }}
-spec:
-  storageClassName: manual
-  capacity:
-    storage: 10Gi
-  accessModes:
-    - ReadWriteMany
-  hostPath:
-    path: /mnt/gover-{{ .Release.Namespace }}
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: gover-volume-claim
-spec:
-  storageClassName: manual
-  volumeName: gover-volume-{{ .Release.Namespace }}
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 10Gi
+    keycloakClientSecret: {{ .Values.Keycloak.GoverBackendClientSecret | quote }}
+    smtpUsername: {{ .Values.Gover.Smtp.Username | quote }}
+    smtpPassword: {{ .Values.Gover.Smtp.Password | quote }}
+    telemetryKey: {{ .Values.Gover.TelemetryKey | quote }}
+    databaseUsername: {{ .Values.Gover.Database.Username | quote }}
+    databasePassword: {{ .Values.Gover.Database.Password | quote }}
+    storageAccessKey: {{ .Values.Gover.Storage.AccessKey | quote }}
+    storageSecretKey: {{ .Values.Gover.Storage.SecretKey | quote }}
+    ePayBlCertPassword: {{ .Values.Gover.Payment.EPayBL.CertPassword | quote }}
+    ePayBlCertBase64: {{ .Values.Gover.Payment.EPayBL.CertBase64 | quote }}
+    pmPaymentClientId: {{ .Values.Gover.Payment.PmPayment.ClientId | quote }}
+    pmPaymentClientSecret: {{ .Values.Gover.Payment.PmPayment.ClientSecret | quote }}
+    giropayProjectPassword: {{ .Values.Gover.Payment.Giropay.ProjectPassword | quote }}
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gover-deployment
-  labels:
-    app: gover
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: gover
-  template:
-    metadata:
-      labels:
+    name: gover-deployment
+    labels:
         app: gover
-    spec:
-      containers:
-        - name: gover
-          image: "ghcr.io/aivot-digital/gover:{{ .Values.Gover.Version }}"
-          ports:
-            - containerPort: 8080
-          env:
-            - name: GOVER_DB_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: gover-database-secrets
-                  key: username
-            - name: GOVER_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: gover-database-secrets
-                  key: password
-            - name: GOVER_KEYCLOAK_OIDC_BACKEND_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: gover-secrets
-                  key: keycloakClientSecret
-            - name: GOVER_SMTP_USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: gover-secrets
-                  key: smtpUsername
-            - name: GOVER_SMTP_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: gover-secrets
-                  key: smtpPassword
-            - name: GOVER_TELEMETRY_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: gover-secrets
-                  key: telemetryKey
-          envFrom:
-            - configMapRef:
-                name: gover-config-map
-          volumeMounts:
-            - mountPath: /app/data
-              name: data-volume
-      volumes:
-        - name: data-volume
-          persistentVolumeClaim:
-            claimName: gover-volume-claim
-      {{- if .Values.NamespacedNodes }}
-      nodeSelector:
-        env: {{ .Release.Namespace }}
-      {{- end }}
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: gover
+    template:
+        metadata:
+            labels:
+                app: gover
+        spec:
+            containers:
+                -   name: gover
+                    image: ghcr.io/aivot-digital/gover:4.2.3
+                    ports:
+                        -   containerPort: 8080
+                    args:
+                        - serve
+                    env:
+                        -   name: GOVER_DB_USERNAME
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: databaseUsername
+                        -   name: GOVER_DB_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: databasePassword
+                        -   name: GOVER_KEYCLOAK_OIDC_BACKEND_CLIENT_SECRET
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: keycloakClientSecret
+                        -   name: GOVER_SMTP_USERNAME
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: smtpUsername
+                        -   name: GOVER_SMTP_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: smtpPassword
+                        -   name: GOVER_TELEMETRY_KEY
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: telemetryKey
+                        -   name: GOVER_STORAGE_REMOTE_ACCESS_KEY
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: storageAccessKey
+                        -   name: GOVER_STORAGE_REMOTE_SECRET_KEY
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: storageSecretKey
+
+                        {{- if .Values.Gover.Payment.EPayBL }}
+                        -   name: GOVER_PAYMENT_EPAYBL_CERT_BASE64
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: ePayBlCertBase64
+                        -   name: GOVER_PAYMENT_EPAYBL_CERT_PASS
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: ePayBlCertPassword
+                        {{- end }}
+
+                        {{- if .Values.Gover.Payment.PmPayment }}
+                        -   name: GOVER_PAYMENT_PMPAYMENT_CLIENT_ID
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: pmPaymentClientId
+                        -   name: GOVER_PAYMENT_PMPAYMENT_CLIENT_SECRET
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: pmPaymentClientSecret
+                        {{- end }}
+
+                        {{- if .Values.Gover.Payment.Giropay }}
+                        -   name: GOVER_PAYMENT_GIROPAY_PROJECT_PASSWORD
+                            valueFrom:
+                                secretKeyRef:
+                                    name: gover-secrets
+                                    key: giropayProjectPassword
+                        {{- end }}
+                    envFrom:
+                        -   configMapRef:
+                                name: gover-config-map
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: gover-service
-  labels:
-    app: gover
+    name: gover-service
+    labels:
+        app: gover
 spec:
-  type: ClusterIP
-  selector:
-    app: gover
-  ports:
-    - protocol: TCP
-      port: 8080
+    type: ClusterIP
+    selector:
+        app: gover
+    ports:
+        -   protocol: TCP
+            port: 8080

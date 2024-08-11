@@ -1,0 +1,5 @@
+-   name: Setup ClamAV
+    hosts: clamav
+    roles:
+        - docker-setup
+        - clamav-setup

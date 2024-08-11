@@ -1,0 +1,20 @@
+-   name: Setup MinIO
+    hosts: minio
+    vars_prompt:
+        -   name: hostname
+            private: false
+            prompt: Enter the hostname for minio
+
+        -   name: le_mail
+            private: false
+            prompt: Enter the email for the lets encrypt certificate
+
+        -   name: admin_username
+            private: false
+            prompt: Enter the username for the minio admin
+
+        -   name: admin_password
+            prompt: Enter the password for the minio admin
+    roles:
+        - docker-setup
+        - minio-setup

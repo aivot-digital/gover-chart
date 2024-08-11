@@ -1,0 +1,13 @@
+-   name: Pull ClamAV Docker image
+    community.docker.docker_image:
+        name: "{{ image }}"
+        source: pull
+
+-   name: Create clamav container
+    community.docker.docker_container:
+        name: clamav
+        image: "{{ image }}"
+        restart_policy: always
+        published_ports:
+            - "3310:3310"
+        state: started

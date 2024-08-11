@@ -1,16 +1,16 @@
-{{- if not .Values.DisableIngress}}
+{{- if .Values.Ingress.Enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: gover-ingress
   annotations:
-    cert-manager.io/issuer: "letsencrypt-production"
+    cert-manager.io/issuer: "letsencrypt-{{ .Values.LetsEncrypt.Mode }}"
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
         - {{ .Values.Host }}
-      secretName: gover-{{ .Release.Namespace }}-tls
+      secretName: "gover-{{ .Release.Namespace }}-{{ .Values.LetsEncrypt.Mode }}-tls"
   rules:
     - host: {{ .Values.Host }}
       http:
@@ -43,4 +43,4 @@ spec:
                 name: gover-customer-app-service
                 port:
                   number: 80
-{{- end}}
+{{- end }}

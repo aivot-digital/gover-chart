@@ -1,0 +1,51 @@
+-   name: Pull docker images
+    community.docker.docker_image:
+        name: "{{ item }}"
+        source: pull
+    with_items:
+        - "{{ traefik_image }}"
+        - "{{ minio_image }}"
+
+-   name: Create Traefik container
+    community.docker.docker_container:
+        name: traefik
+        image: "{{ traefik_image }}"
+        command:
+            - "--providers.docker"
+            - "--api.dashboard=false"
+            - "--entrypoints.web.address=:80"
+            - "--entrypoints.websecure.address=:443"
+            - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+            - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+            - "--entrypoints.web.http.redirections.entrypoint.permanent=true"
+            - "--certificatesresolvers.ssl_resolver.acme.email={{ le_mail }}"
+            - "--certificatesresolvers.ssl_resolver.acme.storage=/var/traefik/acme.json"
+            - "--certificatesresolvers.ssl_resolver.acme.httpchallenge.entrypoint=web"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+            - "/mnt/traefik:/var/traefik"
+        ports:
+            - "80:80"
+            - "443:443"
+        state: started
+
+-   name: Create MinIO container
+    community.docker.docker_container:
+        name: minio
+        image: "{{ minio_image }}"
+        command: 'server /data --console-address ":9001"'
+        env:
+            MINIO_ROOT_USER: "{{ admin_username }}"
+            MINIO_ROOT_PASSWORD: "{{ admin_password }}"
+            MINIO_DOMAIN: "{{ hostname }}"
+            MINIO_SERVER_URL: "https://{{ hostname }}"
+        volumes:
+            - "/mnt/minio:/data"
+        ports:
+            - "9001:9001"
+        labels:
+            "traefik.http.services.minio.loadbalancer.server.port": "9000"
+            "traefik.http.routers.minio.rule": "Host(`{{ hostname }}`)"
+            "traefik.http.routers.minio.tls": "true"
+            "traefik.http.routers.minio.tls.certresolver": "ssl_resolver"
+        state: started

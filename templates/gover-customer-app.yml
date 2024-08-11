@@ -16,13 +16,11 @@ spec:
     spec:
       containers:
         - name: gover-customer-app
-          image: "ghcr.io/aivot-digital/gover-customer:{{ .Values.Gover.Version }}"
+          image: ghcr.io/aivot-digital/gover:4.2.3
           ports:
             - containerPort: 80
-      {{- if .Values.NamespacedNodes }}
-      nodeSelector:
-        env: {{ .Release.Namespace }}
-      {{- end }}
+          args:
+            - customer
 ---
 apiVersion: v1
 kind: Service

@@ -1,0 +1,10 @@
+-   name: Setup PSQL
+    hosts: psql
+    vars_prompt:
+        -   name: admin_username
+            prompt: Enter the username for the database admin
+        -   name: admin_password
+            prompt: Enter the password for the database admin
+    roles:
+        - docker-setup
+        - psql-setup

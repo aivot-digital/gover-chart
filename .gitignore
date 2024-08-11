@@ -1,0 +1,9 @@
+# macOS shenanigans
+.DS_Store
+
+# Jetbrains IDEs
+.idea/
+*.iml
+
+# Project Files
+/my-values/

@@ -1,0 +1,2 @@
+traefik_image: traefik:v3.1.2
+minio_image: minio/minio:RELEASE.2024-07-31T05-46-26Z
