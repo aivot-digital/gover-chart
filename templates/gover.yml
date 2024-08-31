@@ -98,7 +98,7 @@ spec:
         spec:
             containers:
                 -   name: gover
-                    image: ghcr.io/aivot-digital/gover:4.2.4
+                    image: ghcr.io/aivot-digital/gover:4.2.5
                     ports:
                         -   containerPort: 8080
                     args:
