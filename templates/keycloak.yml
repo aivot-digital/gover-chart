@@ -66,7 +66,7 @@ spec:
         spec:
             containers:
                 -   name: keycloak
-                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:25.0.2.0
+                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:26.0.2.0
                     args:
                         - "start"
                         - "--verbose"
