@@ -67,6 +67,13 @@ spec:
             containers:
                 -   name: keycloak
                     image: ghcr.io/aivot-digital/keycloak-egov-plugins:26.0.2.0
+                    resources:
+                        requests:
+                            cpu: 200m
+                            memory: 512Mi
+                        limits:
+                            cpu: 600m
+                            memory: 2Gi
                     args:
                         - "start"
                         - "--verbose"

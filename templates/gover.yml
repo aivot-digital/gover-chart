@@ -49,15 +49,15 @@ data:
     GOVER_STORAGE_REMOTE_ENDPOINT: {{ .Values.Gover.Storage.Endpoint | quote }}
     GOVER_STORAGE_REMOTE_BUCKET: {{ .Values.Gover.Storage.Bucket | quote }}
 
-    {{- if .Values.Gover.Payment.EPayBL }}
+    {{- if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}
     GOVER_PAYMENT_EPAYBL_URL: {{ .Values.Gover.Payment.EPayBL.Url | quote }}
     {{- end}}
 
-    {{- if .Values.Gover.Payment.PmPayment }}
+    {{- if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}
     GOVER_PAYMENT_PMPAYMENT_URL: {{ .Values.Gover.Payment.PmPayment.Url | quote }}
     {{- end}}
 
-    {{- if .Values.Gover.Payment.Giropay }}
+    {{- if and .Values.Gover.Payment .Values.Gover.Payment.Giropay }}
     GOVER_PAYMENT_GIROPAY_URL: {{ .Values.Gover.Payment.Giropay.Url | quote }}
     {{- end}}
 ---
@@ -74,11 +74,11 @@ stringData:
     databasePassword: {{ .Values.Gover.Database.Password | quote }}
     storageAccessKey: {{ .Values.Gover.Storage.AccessKey | quote }}
     storageSecretKey: {{ .Values.Gover.Storage.SecretKey | quote }}
-    ePayBlCertPassword: {{ .Values.Gover.Payment.EPayBL.CertPassword | quote }}
-    ePayBlCertBase64: {{ .Values.Gover.Payment.EPayBL.CertBase64 | quote }}
-    pmPaymentClientId: {{ .Values.Gover.Payment.PmPayment.ClientId | quote }}
-    pmPaymentClientSecret: {{ .Values.Gover.Payment.PmPayment.ClientSecret | quote }}
-    giropayProjectPassword: {{ .Values.Gover.Payment.Giropay.ProjectPassword | quote }}
+    ePayBlCertPassword: {{if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}{{ .Values.Gover.Payment.EPayBL.CertPassword | quote }}{{ end }}
+    ePayBlCertBase64: {{if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}{{ .Values.Gover.Payment.EPayBL.CertBase64 | quote }}{{ end }}
+    pmPaymentClientId: {{if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}{{ .Values.Gover.Payment.PmPayment.ClientId | quote }}{{ end }}
+    pmPaymentClientSecret: {{if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}{{ .Values.Gover.Payment.PmPayment.ClientSecret | quote }}{{ end }}
+    giropayProjectPassword: {{if and .Values.Gover.Payment .Values.Gover.Payment.Giropay }}{{ .Values.Gover.Payment.Giropay.ProjectPassword | quote }}{{ end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -99,6 +99,13 @@ spec:
             containers:
                 -   name: gover
                     image: ghcr.io/aivot-digital/gover:4.2.6
+                    resources:
+                        requests:
+                            cpu: 400m
+                            memory: 512Mi
+                        limits:
+                            cpu: 800m
+                            memory: 2Gi
                     ports:
                         -   containerPort: 8080
                     args:
@@ -145,7 +152,7 @@ spec:
                                     name: gover-secrets
                                     key: storageSecretKey
 
-                        {{- if .Values.Gover.Payment.EPayBL }}
+                        {{- if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}
                         -   name: GOVER_PAYMENT_EPAYBL_CERT_BASE64
                             valueFrom:
                                 secretKeyRef:
@@ -158,7 +165,7 @@ spec:
                                     key: ePayBlCertPassword
                         {{- end }}
 
-                        {{- if .Values.Gover.Payment.PmPayment }}
+                        {{- if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}
                         -   name: GOVER_PAYMENT_PMPAYMENT_CLIENT_ID
                             valueFrom:
                                 secretKeyRef:
@@ -171,7 +178,7 @@ spec:
                                     key: pmPaymentClientSecret
                         {{- end }}
 
-                        {{- if .Values.Gover.Payment.Giropay }}
+                        {{- if and .Values.Gover.Payment .Values.Gover.Payment.Giropay }}
                         -   name: GOVER_PAYMENT_GIROPAY_PROJECT_PASSWORD
                             valueFrom:
                                 secretKeyRef:
