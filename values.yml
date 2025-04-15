@@ -34,6 +34,7 @@ Gover:
     # This is used to encrypt the secrets in the Gover application.
     # Make sure to never lose this key.
     # Secrets encrypted by this key cannot be recovered once the key was lost.
+    # Make sure to set this key to a random string with at least 32 and at most 96 characters.
     SecretsKey: 'some-secrets-key'
 
     # Settings for the database connection.
