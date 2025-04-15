@@ -23,6 +23,8 @@ data:
     KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Email | quote }}
     KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.SupportContact.Name | quote }}
     KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.SupportContact.Email | quote }}
+    KC_SPI_EGOV_BUNDID_DISPLAY_NAME: {{ .Values.Keycloak.IdProviderData.DisplayName | quote }}
+    KC_SPI_EGOV_BUNDID_DISPLAY_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
 
     KC_SPI_EGOV_BAYERNID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
     KC_SPI_EGOV_BAYERNID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
@@ -66,7 +68,7 @@ spec:
         spec:
             containers:
                 -   name: keycloak
-                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:26.0.2.0
+                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:26.1.3.0
                     resources:
                         requests:
                             cpu: 200m

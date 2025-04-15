@@ -30,10 +30,11 @@ Gover:
     # This will be used if no sentry is set up.
     ReportMail: admin@my.domain.de
 
-    # Set the telemetry key for the Gover application.
-    # This is used to fetch telemetry data from the Gover application.
-    # This is especially useful if you have multiple instances of the Gover application running.
-    TelemetryKey: 'some-telemetry-key'
+    # Set the secrets key for the Gover application.
+    # This is used to encrypt the secrets in the Gover application.
+    # Make sure to never lose this key.
+    # Secrets encrypted by this key cannot be recovered once the key was lost.
+    SecretsKey: 'some-secrets-key'
 
     # Settings for the database connection.
     Database:
@@ -91,46 +92,6 @@ Gover:
         # List of allowed file content types.
         ContentTypes: |
             application/pdf, image/png, image/jpeg, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/msexcel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/mspowerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, application/vnd.oasis.opendocument.text, application/vnd.oasis.opendocument.spreadsheet, application/vnd.oasis.opendocument.presentation, application/vnd.oasis.opendocument.graphics, application/vnd.oasis.opendocument.formula
-
-    # Settings for the payment providers.
-    # Remove this section if you don't want to use any of them.
-    Payment:
-        # Settings for the EPayBL payment provider.
-        # If you want to use EPayBL, you need to set up the certificate in the Gover application.
-        # Place the certificate in the files folder of this cart with the name epaybl.p12.
-        # Remove this section if you don't want to use EPayBL.
-        EPayBL:
-            # The URL for the EPayBL payment provider.
-            # Set this to production URL if you want to use the production environment.
-            Url: https://epayment-stage.dataport.de/konnektor/epayment/
-            # The base64 encoded certificate for the ePayBL provider.
-            CertBase64: {{ .Files.Get "files/epaybl.p12" | b64enc }}
-            # The password for the ePayBL certificate.
-            CertPassword: password
-
-        # Settings for the pmPayment provider.
-        # Remove this section if you don't want to use pmPayment.
-        PmPayment:
-            # The URL for the pmPayment provider.
-            # Set this to production URL if you want to use the production environment.
-            # URL must end with a slash
-            Url: https://payment-test.govconnect.de/
-            # The client id for the pmPayment provider.
-            # You can get this from the portal of pmPayment in the oAuth-Section.
-            ClientId: clientid
-            # The client secret for the pmPayment provider.
-            # You can get this from the portal of pmPayment in the oAuth-Section.
-            ClientSecret: clientsecret
-
-        # Settings for the Giropay payment provider.
-        # Remove this section if you don't want to use Giropay.
-        Giropay:
-            # The URL for the Giropay payment provider.
-            # This is production and staging in one.
-            Url: https://payment.girosolution.de/girocheckout/api/v2/transaction/start
-            # The password for giropay.
-            # You can get this from the giropay portal.
-            ProjectPassword: password
 
     # Settings for the storage connection.
     Storage:

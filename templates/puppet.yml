@@ -16,7 +16,7 @@ spec:
         spec:
             containers:
                 -   name: puppet
-                    image: ghcr.io/aivot-digital/puppet-pdf:1.3.3
+                    image: ghcr.io/aivot-digital/puppet-pdf:2.0.0
                     resources:
                         requests:
                             cpu: 250m

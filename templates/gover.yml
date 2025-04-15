@@ -48,18 +48,6 @@ data:
 
     GOVER_STORAGE_REMOTE_ENDPOINT: {{ .Values.Gover.Storage.Endpoint | quote }}
     GOVER_STORAGE_REMOTE_BUCKET: {{ .Values.Gover.Storage.Bucket | quote }}
-
-    {{- if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}
-    GOVER_PAYMENT_EPAYBL_URL: {{ .Values.Gover.Payment.EPayBL.Url | quote }}
-    {{- end}}
-
-    {{- if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}
-    GOVER_PAYMENT_PMPAYMENT_URL: {{ .Values.Gover.Payment.PmPayment.Url | quote }}
-    {{- end}}
-
-    {{- if and .Values.Gover.Payment .Values.Gover.Payment.Giropay }}
-    GOVER_PAYMENT_GIROPAY_URL: {{ .Values.Gover.Payment.Giropay.Url | quote }}
-    {{- end}}
 ---
 apiVersion: v1
 kind: Secret
@@ -69,16 +57,11 @@ stringData:
     keycloakClientSecret: {{ .Values.Keycloak.GoverBackendClientSecret | quote }}
     smtpUsername: {{ .Values.Gover.Smtp.Username | quote }}
     smtpPassword: {{ .Values.Gover.Smtp.Password | quote }}
-    telemetryKey: {{ .Values.Gover.TelemetryKey | quote }}
+    secretsKey: {{ .Values.Gover.SecretsKey | quote }}
     databaseUsername: {{ .Values.Gover.Database.Username | quote }}
     databasePassword: {{ .Values.Gover.Database.Password | quote }}
     storageAccessKey: {{ .Values.Gover.Storage.AccessKey | quote }}
     storageSecretKey: {{ .Values.Gover.Storage.SecretKey | quote }}
-    ePayBlCertPassword: {{if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}{{ .Values.Gover.Payment.EPayBL.CertPassword | quote }}{{ end }}
-    ePayBlCertBase64: {{if and .Values.Gover.Payment .Values.Gover.Payment.EPayBL }}{{ .Values.Gover.Payment.EPayBL.CertBase64 | quote }}{{ end }}
-    pmPaymentClientId: {{if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}{{ .Values.Gover.Payment.PmPayment.ClientId | quote }}{{ end }}
-    pmPaymentClientSecret: {{if and .Values.Gover.Payment .Values.Gover.Payment.PmPayment }}{{ .Values.Gover.Payment.PmPayment.ClientSecret | quote }}{{ end }}
-    giropayProjectPassword: {{if and .Values.Gover.Payment .Values.Gover.Payment.Giropay }}{{ .Values.Gover.Payment.Giropay.ProjectPassword | quote }}{{ end }}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -98,7 +81,7 @@ spec:
         spec:
             containers:
                 -   name: gover
-                    image: ghcr.io/aivot-digital/gover:4.2.6
+                    image: ghcr.io/aivot-digital/gover:4.3.0
                     resources:
                         requests:
                             cpu: 400m
