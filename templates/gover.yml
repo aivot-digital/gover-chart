@@ -81,7 +81,7 @@ spec:
         spec:
             containers:
                 -   name: gover
-                    image: ghcr.io/aivot-digital/gover:4.3.2
+                    image: ghcr.io/aivot-digital/gover:4.4.0
                     resources:
                         requests:
                             cpu: 400m
