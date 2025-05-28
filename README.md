@@ -1,4 +1,7 @@
 # Gover Helm Chart
+
+This repository contains the official Helm chart for deploying Gover on Kubernetes. The chart simplifies the installation, configuration, and management of Gover, providing customizable deployment options for various environments. For more information about Gover, visit the main repository at https://github.com/aivot-digital/gover
+
 ## Prerequisites
 - A Kubernetes cluster
 - A Server running PostgreSQL to store your data
