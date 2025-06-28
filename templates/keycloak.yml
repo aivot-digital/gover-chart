@@ -14,19 +14,11 @@ data:
     KC_DB: "postgres"
     KC_DB_URL: "jdbc:postgresql://{{ .Values.Keycloak.Database.Host }}:{{ .Values.Keycloak.Database.Port }}/{{ .Values.Keycloak.Database.Database }}"
 
-    KC_SPI_EGOV_BUNDID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
-    KC_SPI_EGOV_BUNDID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
-    KC_SPI_EGOV_BUNDID_ORG_NAME: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
-    KC_SPI_EGOV_BUNDID_ORG_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
-    KC_SPI_EGOV_BUNDID_ORG_URL: {{ .Values.Keycloak.IdProviderData.Org.Url | quote }}
-    KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Name | quote }}
-    KC_SPI_EGOV_BUNDID_TECHNICAL_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.TechnicalContact.Email | quote }}
-    KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_NAME: {{ .Values.Keycloak.IdProviderData.SupportContact.Name | quote }}
-    KC_SPI_EGOV_BUNDID_SUPPORT_CONTACT_EMAIL: {{ .Values.Keycloak.IdProviderData.SupportContact.Email | quote }}
+    KC_SPI_EGOV_BUNDID_SP_BMI_ID: {{ .Values.Keycloak.IdProviderData.BMI_ID | quote }}
     KC_SPI_EGOV_BUNDID_DISPLAY_NAME: {{ .Values.Keycloak.IdProviderData.DisplayName | quote }}
-    KC_SPI_EGOV_BUNDID_DISPLAY_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
 
     KC_SPI_EGOV_BAYERNID_SP_NAME: {{ .Values.Keycloak.IdProviderData.Name | quote }}
+    KC_SPI_EGOV_BAYERNID_ONLINE_SERVICE_ID: {{ .Values.Keycloak.IdProviderData.Online_Service_ID | quote }}
     KC_SPI_EGOV_BAYERNID_SP_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Description | quote }}
     KC_SPI_EGOV_BAYERNID_ORG_NAME: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
     KC_SPI_EGOV_BAYERNID_ORG_DESCRIPTION: {{ .Values.Keycloak.IdProviderData.Org.Name | quote }}
@@ -68,7 +60,7 @@ spec:
         spec:
             containers:
                 -   name: keycloak
-                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:26.2.4.0
+                    image: ghcr.io/aivot-digital/keycloak-egov-plugins:26.2.4.1
                     resources:
                         requests:
                             cpu: 200m

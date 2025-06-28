@@ -35,10 +35,6 @@ data:
     GOVER_KEYCLOAK_OIDC_HOSTNAME: "https://{{ .Values.Host }}/idp"
     GOVER_KEYCLOAK_OIDC_REALM: "staff"
 
-    GOVER_KEYCLOAK_ID_CLIENT: "app"
-    GOVER_KEYCLOAK_ID_HOSTNAME: "https://{{ .Values.Host }}/idp"
-    GOVER_KEYCLOAK_ID_REALM: "customer"
-
     GOVER_REDIS_HOST: "redis-service"
     GOVER_REDIS_PORT: "6379"
     GOVER_REDIS_DATABASE: "0"
@@ -58,6 +54,7 @@ stringData:
     smtpUsername: {{ .Values.Gover.Smtp.Username | quote }}
     smtpPassword: {{ .Values.Gover.Smtp.Password | quote }}
     secretsKey: {{ .Values.Gover.SecretsKey | quote }}
+    captchaKey: {{ .Values.Gover.CaptchaKey | quote }}
     databaseUsername: {{ .Values.Gover.Database.Username | quote }}
     databasePassword: {{ .Values.Gover.Database.Password | quote }}
     storageAccessKey: {{ .Values.Gover.Storage.AccessKey | quote }}
@@ -81,7 +78,7 @@ spec:
         spec:
             containers:
                 -   name: gover
-                    image: ghcr.io/aivot-digital/gover:4.4.0
+                    image: ghcr.io/aivot-digital/gover:4.5.0
                     resources:
                         requests:
                             cpu: 400m
@@ -124,6 +121,11 @@ spec:
                                 secretKeyRef:
                                     name: gover-secrets
                                     key: secretsKey
+                        -   name: GOVER_CAPTCHA_KEY
+                            valueFrom:
+                              secretKeyRef:
+                                name: gover-secrets
+                                key: captchaKey
                         -   name: GOVER_STORAGE_REMOTE_ACCESS_KEY
                             valueFrom:
                                 secretKeyRef:
