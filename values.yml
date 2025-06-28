@@ -37,6 +37,11 @@ Gover:
     # Make sure to set this key to a random string with at least 32 and at most 96 characters.
     SecretsKey: 'some-secrets-key'
 
+    # Set the ecapcha key for the Gover application.
+    # This is used to verify that the user is not a bot.
+    # Make sure to set this key to a 32 character string.
+    CaptchaKey: 'some-captcha-key'
+
     # Settings for the database connection.
     Database:
         # The host for the Gover database.
@@ -142,6 +147,10 @@ Keycloak:
         # Name of the service connecting to the various identity providers.
         # This should usually be Gover.
         Name: Gover
+        # The ID given by the BMI
+        BMI_ID: BMI-12345678
+        # ID given by the Bavarian State Ministry of Digital Affairs
+        Online_Service_ID: 1234567890-DE
         # Display name of the provider of the Gover instance.
         # This will be shown to the citizens when they use the identity providers.
         DisplayName: Gover Testinstanz
